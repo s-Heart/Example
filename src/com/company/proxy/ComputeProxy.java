@@ -33,7 +33,7 @@ public class ComputeProxy {
             System.out.println("fileSum==============" + fileSum);
         }
         //todo 机械硬盘/SSD 分别测试执行效率
-        executorService = Executors.newFixedThreadPool(1);
+        executorService = Executors.newFixedThreadPool(10);
         taskFinishNum = 0;
     }
 
@@ -47,7 +47,7 @@ public class ComputeProxy {
         public void postResult(Map<String, TResult> threadMap) {
 //            synchronized (lock) {
                 taskFinishNum++;
-                System.out.println("taskFinishNum==========="+ taskFinishNum);
+//                System.out.println("taskFinishNum==========="+ taskFinishNum);
                 finishList.add(threadMap);
 //                doStat(threadMap);
                 if (taskFinishNum == fileSum) {
