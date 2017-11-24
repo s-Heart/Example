@@ -29,9 +29,6 @@ public class Main {
         directoryPath = args[0];
 
         computeProxy.setCallbackListener((Map<String, TResult> resultSumMap) -> {
-//            for (String domain : resultSumMap.keySet()) {
-//                System.out.println(resultSumMap.get(domain));
-//            }
             logger("----------------------结果------------------------");
             //1.study.koolearn.com的访问总数；
             printStudy(resultSumMap);
