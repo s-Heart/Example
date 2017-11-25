@@ -14,6 +14,7 @@ public class Main {
     private static ComputeProxy computeProxy;
     private static String directoryPath;
     private static StringBuilder stringBuilder;
+    private static final int THREAD_COUNT = 4;/*线程数*/
 
     public static void main(String[] args) {
 
@@ -25,7 +26,7 @@ public class Main {
         stringBuilder = new StringBuilder();
         long startTime = System.currentTimeMillis();
         logger(String.format("----------------------开始%s(当前时间戳)-----------------------", startTime));
-        computeProxy = new ComputeProxy(args[0]);
+        computeProxy = new ComputeProxy(args[0], THREAD_COUNT);
         directoryPath = args[0];
 
         computeProxy.setCallbackListener((Map<String, TResult> resultSumMap) -> {
@@ -53,7 +54,12 @@ public class Main {
         if (!file.exists()) {
             file.mkdir();
         }
-        File logFile = new File(outDirectoryPath + "/" + "stat_" + new SimpleDateFormat("yyyy_MM_dd_HHmmsss").format(new Date()) + ".log");
+        File logFile = new File(outDirectoryPath +
+                "/" +
+                "stat_" +
+                new SimpleDateFormat("yyyy_MM_dd_HHmmsss").format(new Date()) +
+                "_threadCount_" + THREAD_COUNT +
+                ".log");
         FileWriter fileWriter = null;
         try {
             fileWriter = new FileWriter(logFile);

@@ -25,7 +25,7 @@ public class ComputeProxy {
     private Map<String, TResult> sumMap = new HashMap<>();
     private List<Map<String, TResult>> finishList = new ArrayList<>();
 
-    public ComputeProxy(String directoryPath) {
+    public ComputeProxy(String directoryPath, int threadCount) {
         File root = new File(directoryPath);
         if (root.isDirectory()) {
             files = root.listFiles();
@@ -33,7 +33,10 @@ public class ComputeProxy {
             System.out.println("fileSum==============" + fileSum);
         }
         //todo 机械硬盘/SSD 分别测试执行效率
-        executorService = Executors.newFixedThreadPool(10);
+        //开的线程越多反而越慢
+        //测试结果：单线程最慢，4/5个线程效率最高，再往上没有实际改观
+        executorService = Executors.newFixedThreadPool(threadCount);
+//        executorService = Executors.newCachedThreadPool();
         taskFinishNum = 0;
     }
 
@@ -41,19 +44,19 @@ public class ComputeProxy {
         this.listener = callbackListener;
     }
 
-    private Object lock=new Object();
+    private Object lock = new Object();
     private InnerHandler proxyListener = new InnerHandler() {
         @Override
         public void postResult(Map<String, TResult> threadMap) {
 //            synchronized (lock) {
-                taskFinishNum++;
+            taskFinishNum++;
 //                System.out.println("taskFinishNum==========="+ taskFinishNum);
-                finishList.add(threadMap);
+            finishList.add(threadMap);
 //                doStat(threadMap);
-                if (taskFinishNum == fileSum) {
-                    doStat(finishList);
+            if (taskFinishNum == fileSum) {
+                doStat(finishList);
 //                    listener.onFinish(sumMap);
-                }
+            }
 //            }
         }
     };
